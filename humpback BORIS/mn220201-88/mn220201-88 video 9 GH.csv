@@ -1,0 +1,57 @@
+Observation id,mn220201-88 video 9 GH,,,,,,,,,
+,,,,,,,,,,
+Media file(s),,,,,,,,,,
+,,,,,,,,,,
+Player #1,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,,,,,,,,,
+,,,,,,,,,,
+Observation date,2023-03-03 20:09:11,,,,,,,,,
+,,,,,,,,,,
+Description,,,,,,,,,,
+,,,,,,,,,,
+Time offset (s),0.000,,,,,,,,,
+,,,,,,,,,,
+independent variables,,,,,,,,,,
+variable,value,,,,,,,,,
+,,,,,,,,,,
+Time,Media file path,Total length,FPS,Subject,Behavior,Behavioral category,Modifier 1,Modifier 2,Comment,Status
+0.000,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,Tag position,,right flipper,directly facing rostrum,,POINT
+0.000,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,START
+3.903,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,travel,,water column,,,START
+6.652,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+25.903,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+47.656,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,fish present,,no visible particulates,swimming close to the whale. unsure if feeding,,POINT
+51.655,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,STOP
+64.404,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,START
+79.655,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,STOP
+88.655,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+126.654,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+139.405,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+168.655,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+169.908,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,START
+178.905,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+199.406,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+210.905,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+225.657,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,STOP
+225.658,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,ventral side,,,START
+262.656,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,fish present,,no visible particulates,swimming close to the whale. unsure if feeding,,POINT
+279.155,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,travel,,water column,,,STOP
+284.155,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,rest,,water column,,,START
+380.655,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+388.154,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+397.156,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+406.155,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+421.657,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,3rd whale present,,,,,START
+434.156,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,3rd whale present,,,,,STOP
+522.904,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,ventral side,,,STOP
+530.158,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+537.406,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+543.405,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,3rd whale present,,,,,START
+547.157,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+554.154,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,3rd whale present,,,,,STOP
+557.658,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+562.155,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,START
+568.409,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,breath,,cannot see blowholes,,,POINT
+576.654,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,3rd whale present,,,,,START
+583.052,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,3rd whale present,,,,,STOP
+583.052,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,mother present,,other,,,STOP
+583.052,C:/Users/aholl/Documents/Tag analysis/CATS/tag_data_raw/Hawaii/2022/mn220201-88/raw/CATS 88-20220201-093456-000-00009.mov,583.500,30.0,,rest,,water column,,,STOP
