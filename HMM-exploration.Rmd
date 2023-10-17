@@ -1,0 +1,539 @@
+---
+title: "HMM exploration"
+output: html_document
+date: "2023-09-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Hidden Markov Model exploration for calves
+
+# loading and visualizing data
+load the libraries and the data from Matlab (it will already be chunked and averaged over a specified window)
+```{r}
+library(fitdistrplus)
+library(momentuHMM)
+library(data.table)
+library(ggplot2)
+
+all_other = read.csv('all_other.csv')
+all_rest = read.csv('all_rest.csv')
+all_travel = read.csv('all_travel.csv')
+
+# rename the columns 
+col_names = c('date_no', 'avg_speed', 'mean_resultant_length', 
+              'max_depth', 'msa')
+names(all_other) = col_names
+names(all_rest) = col_names
+names(all_travel) = col_names
+
+all_all = rbind(all_rest, all_travel, all_other)
+```
+
+Look at the distributions of all 4 data streams
+
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+hist(all_all$avg_speed, breaks=30)
+hist(all_all$mean_resultant_length, breaks=30)
+hist(all_all$max_depth, breaks=30)
+hist(all_all$msa, breaks=30)
+```
+
+## parameter estimation for each variable
+
+SPEED
+```{r}
+moment_match_gamma <- function(mu, sigma){
+  # sigma is the standard deviation
+  alpha = (mu ^ 2) / (sigma ^ 2)
+  beta = mu / (sigma ^ 2)
+  parameters = c(alpha, beta)
+  names(parameters) = c('alpha', 'beta')
+  parameters
+}
+
+
+# calculate the parameters for the travel state
+travel_params = moment_match_gamma(
+  mean(all_travel$avg_speed), 
+  sd(all_travel$avg_speed)
+)
+
+#and for the rest state
+rest_params = moment_match_gamma(
+  mean(all_rest$avg_speed), 
+  sd(all_rest$avg_speed)
+)
+```
+
+plot the traveling and resting data and distributions
+
+```{r, echo=FALSE}
+# subplots
+par(mfrow = c(2, 1))
+
+# histogram for travel 
+hist(all_travel$avg_speed, probability = TRUE, breaks=20, main = 'Travel', 
+     xlim=c(0, max(all_travel$avg_speed)), xlab='')
+
+# vertical line for mean
+abline(v=mean(all_travel$avg_speed), col='red', lwd=2)
+
+# curve for estimated gamma
+curve(dgamma(x, travel_params['alpha'], travel_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+
+hist(all_rest$avg_speed, probability = TRUE, breaks=20, main = 'Rest',
+     xlim=c(0, max(all_travel$avg_speed)))
+
+abline(v=mean(all_rest$avg_speed), col='red', lwd=2)
+curve(dgamma(x, rest_params['alpha'], rest_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+
+```
+MEAN RESULTANT LENGTH
+```{r}
+moment_match_beta <- function(mu, var){
+  # var is the variance
+  alpha = ((1 - mu) / var - 1 / mu) * mu ^ 2
+  beta = alpha * (1 / mu - 1)
+  parameters = c(alpha, beta)
+  names(parameters) = c('alpha', 'beta')
+  parameters
+}
+
+travel_mrl_params = moment_match_beta(
+  mean(all_travel$mean_resultant_length), 
+  var(all_travel$mean_resultant_length)
+)
+
+rest_mrl_params = moment_match_beta(
+  mean(all_rest$mean_resultant_length), 
+  var(all_rest$mean_resultant_length)
+)
+```
+
+plot the traveling and resting data and distributions
+
+```{r}
+par(mfrow = c(2, 1))
+hist(all_travel$mean_resultant_length, probability = TRUE, breaks=20, main = 'Travel', 
+     xlim=c(0, max(all_travel$mean_resultant_length)), xlab='')
+
+# vertical line for mean
+abline(v=mean(all_travel$mean_resultant_length), col='red', lwd=2)
+
+# curve for estimated beta
+curve(dbeta(x, travel_mrl_params['alpha'], travel_mrl_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+
+# ditto as above but for rest 
+hist(all_rest$mean_resultant_length, probability = TRUE, breaks=20, main = 'Rest',
+     xlim=c(0, max(all_travel$mean_resultant_length)))
+
+abline(v=mean(all_rest$mean_resultant_length), col='red', lwd=2)
+
+curve(dbeta(x, rest_mrl_params['alpha'], rest_mrl_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+```
+
+DEPTH
+```{r}
+travel_depth_params = moment_match_gamma(
+  mean(all_travel$max_depth), 
+  sd(all_travel$max_depth)
+)
+
+rest_depth_params = moment_match_gamma(
+  mean(all_rest$max_depth), 
+  sd(all_rest$max_depth)
+)
+```
+
+plot the traveling and resting data and distributions
+```{r}
+par(mfrow = c(2, 1))
+hist(all_travel$max_depth, probability = TRUE, breaks=20, main = 'Travel', 
+     xlim=c(0, max(all_travel$max_depth)), xlab='')
+
+# vertical line for mean
+abline(v=mean(all_travel$max_depth), col='red', lwd=2)
+
+# curve for estimated gamma
+curve(dgamma(x, travel_depth_params['alpha'], travel_depth_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+
+# ditto as above but for rest 
+hist(all_rest$max_depth, probability = TRUE, breaks=20, main = 'Rest',
+     xlim=c(0, max(all_travel$max_depth)))
+
+abline(v=mean(all_rest$max_depth), col='red', lwd=2)
+
+curve(dgamma(x, rest_depth_params['alpha'], rest_depth_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+```
+
+AVERAGE MINIMUM SPECIFIC ACCELERATION
+```{r}
+travel_msa_params = moment_match_gamma(
+  mean(all_travel$msa), 
+  sd(all_travel$msa)
+)
+
+rest_msa_params = moment_match_gamma(
+  mean(all_rest$msa), 
+  sd(all_rest$msa)
+)
+```
+
+plot the traveling and resting data and distributions
+```{r}
+par(mfrow = c(2, 1))
+hist(all_travel$msa, probability = TRUE, breaks=20, main = 'Travel', 
+     xlim=c(0, max(all_travel$msa)), xlab='')
+
+# vertical line for mean
+abline(v=mean(all_travel$msa), col='red', lwd=2)
+
+# curve for estimated gamma
+curve(dgamma(x, travel_msa_params['alpha'], travel_msa_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+
+# ditto as above but for rest 
+hist(all_rest$msa, probability = TRUE, breaks=20, main = 'Rest',
+     xlim=c(0, max(all_travel$msa)))
+
+abline(v=mean(all_rest$msa), col='red', lwd=2)
+
+curve(dgamma(x, rest_msa_params['alpha'], rest_msa_params['beta']), 
+      add = T, col = 'blue', lwd = 2)
+```
+
+## simulate data and run simple HMMs
+
+Simulate speed
+```{r}
+# simulate rest data from parameters
+n_rest = nrow(all_rest)
+sim_rest = rgamma(n_rest, rest_params['alpha'], rest_params['beta'])
+
+# simulate travel data from parameters
+n_travel = nrow(all_travel)
+sim_travel = rgamma(n_travel, travel_params['alpha'], travel_params['beta'])
+
+xlim = c(0, max(all_travel$avg_speed))
+
+par(mfrow=c(2, 2))
+hist(all_travel$avg_speed, breaks=30, xlim=xlim)
+hist(all_rest$avg_speed, breaks=30, xlim=xlim)
+hist(sim_travel, breaks=30, xlim=xlim)
+hist(sim_rest, breaks=30, xlim=xlim)
+```
+
+compare simulated speed HMM output to real speed data HMM output
+```{r}
+#try the HMM on the simulated speed data
+sim_speed<- c(sim_travel, sim_rest)
+combined_sim_speeds <- data.frame(avg_speed = sim_speed)
+
+sim_speed_data<- prepData(combined_sim_speeds, type='LL', coordNames=NULL)
+dist<-list(avg_speed="gamma")
+Par0 <- list(avg_speed= c(rest_params[['alpha']],travel_params[['alpha']] , rest_params[['beta']], travel_params[['beta']]))
+stateNames <- c("resting","traveling")
+
+sim_test1_speed <- fitHMM(sim_speed_data, nbStates=2, dist=dist, Par0=Par0, stateNames=stateNames)
+print(sim_test1_speed)
+
+plot(sim_test1_speed, plotCI = TRUE, breaks=30)
+
+```
+The model did not work on the simulated data...
+
+real speed data HMM
+```{r}
+all_speed<- c(all_travel$avg_speed, all_rest$avg_speed)
+combined_avg_speeds <- data.frame(avg_speed = all_speed)
+
+speed_data<- prepData(combined_avg_speeds, type='LL', coordNames=NULL)
+dist<-list(avg_speed="gamma")
+Par0 <- list(avg_speed= c(rest_params['alpha'],travel_params['alpha'] , rest_params['beta'], travel_params['beta']))
+stateNames <- c("traveling","resting")
+
+test1_speed <- fitHMM(speed_data, nbStates=2, dist=dist, Par0=Par0, stateNames=stateNames)
+print(test1_speed)
+
+states <- viterbi(test1_speed)
+table(states)/nrow(speed_data) #well that didn't really work
+plot(test1_speed, plotCI = TRUE, breaks=30)
+
+```
+
+
+Simulate MRL
+```{r}
+# simulate rest data from parameters
+n_rest = nrow(all_rest)
+sim_mrl_rest = rbeta(n_rest, rest_mrl_params['alpha'], rest_mrl_params['beta'])
+
+# simulate travel data from parameters
+n_travel = nrow(all_travel)
+sim_mrl_travel = rbeta(n_travel, travel_mrl_params['alpha'], travel_mrl_params['beta'])
+
+xlim = c(0, max(all_travel$mean_resultant_length))
+
+par(mfrow=c(2, 2))
+hist(all_travel$mean_resultant_length, breaks=30, xlim=xlim)
+hist(all_rest$mean_resultant_length, breaks=30, xlim=xlim)
+hist(sim_mrl_travel, breaks=30, xlim=xlim)
+hist(sim_mrl_rest, breaks=30, xlim=xlim)
+```
+
+Compare simulated MRL results to real MRL data results
+```{r}
+sim_mrl<- c(sim_mrl_travel, sim_mrl_rest)
+combined_sim_mrl <- data.frame(mrl = sim_mrl)
+
+sim_mrl_data<- prepData(combined_sim_mrl, type='LL', coordNames=NULL)
+dist<-list(mrl="beta")
+Par0 <- list(mrl= c(rest_mrl_params['alpha'],travel_mrl_params['alpha'] , rest_mrl_params['beta'], travel_mrl_params['beta']))
+stateNames <- c("resting","traveling")
+
+sim_test2_mrl <- fitHMM(sim_mrl_data, nbStates=2, dist=dist, Par0=Par0, stateNames=stateNames)
+print(sim_test2_mrl)
+plot(sim_test2_mrl, plotCI = TRUE, breaks=30)
+
+```
+
+real mrl data HMM
+```{r}
+all_mrl<- c(all_travel$mean_resultant_length, all_rest$mean_resultant_length)
+combined_mrl <- data.frame(mrl = all_mrl)
+
+mrl_data<- prepData(combined_mrl, type='LL', coordNames=NULL)
+dist<-list(mrl="beta")
+Par0 <- list(mrl= c(rest_mrl_params['alpha'],travel_mrl_params['alpha'] , rest_mrl_params['beta'], travel_mrl_params['beta']))
+stateNames <- c("resting","traveling")
+
+test2_mrl <- fitHMM(mrl_data, nbStates=2, dist=dist, Par0=Par0, stateNames=stateNames)
+print(test2_mrl)
+
+states <- viterbi(test2_mrl)
+table(states)/nrow(mrl_data) #well that didn't really work
+plot(test2_mrl, plotCI = TRUE, breaks=30)
+```
+
+simulate max depth
+```{r}
+# simulate rest data from parameters
+n_rest = nrow(all_rest)
+sim_depth_rest = rgamma(n_rest, rest_depth_params['alpha'], rest_depth_params['beta'])
+
+# simulate travel data from parameters
+n_travel = nrow(all_travel)
+sim_depth_travel = rgamma(n_travel, travel_depth_params['alpha'], travel_depth_params['beta'])
+
+xlim = c(0, max(all_travel$max_depth))
+
+par(mfrow=c(2, 2))
+hist(all_travel$max_depth, breaks=30, xlim=xlim)
+hist(all_rest$max_depth, breaks=30, xlim=xlim)
+hist(sim_depth_travel, breaks=30, xlim=xlim)
+hist(sim_depth_rest, breaks=30, xlim=xlim)
+```
+
+Compare simulated max depth HMM to real max depth HMM
+```{r}
+sim_depth<- c(sim_depth_travel, sim_depth_rest)
+combined_sim_depth<- data.frame(max_depth = sim_depth)
+sim_depth_data<- prepData(combined_sim_depth, type='LL', coordNames=NULL)
+dist<-list(max_depth="gamma")
+Par0 <- list(max_depth= c(rest_depth_params['alpha'],travel_depth_params['alpha'] , rest_depth_params['beta'], travel_depth_params['beta']))
+stateNames <- c("traveling","resting")
+
+sim_test2_depth <- fitHMM(sim_depth_data, nbStates=2, dist=dist6, Par0=Par06, stateNames=stateNames6)
+print(sim_test2_depth)
+
+states <- viterbi(sim_test2_depth)
+plot(sim_test2_depth, plotCI = TRUE, breaks=30)
+```
+real max depth data HMM
+
+```{r}
+all_depth<- c(all_travel$max_depth, all_rest$max_depth)
+combined_depth <- data.frame(max_depth = all_depth)
+depth_data<- prepData(combined_depth, type='LL', coordNames=NULL)
+dist<-list(max_depth="gamma")
+Par0 <- list(max_depth= c(rest_depth_params['alpha'],travel_depth_params['alpha'] , rest_depth_params['beta'], travel_depth_params['beta']))
+stateNames<- c("traveling","resting")
+
+test2_depth <- fitHMM(depth_data, nbStates=2, dist=dist7, Par0=Par07, stateNames=stateNames7)
+print(test2_depth)
+
+states <- viterbi(test2_depth)
+table(states)/nrow(depth_data) #well that didn't really work
+plot(test2_depth, plotCI = TRUE, breaks=30)
+```
+
+simulate average MSA
+```{r}
+# simulate rest data from parameters
+n_rest = nrow(all_rest)
+sim_msa_rest = rgamma(n_rest, rest_msa_params['alpha'], rest_msa_params['beta'])
+
+# simulate travel data from parameters
+n_travel = nrow(all_travel)
+sim_msa_travel = rgamma(n_travel, travel_msa_params['alpha'], travel_msa_params['beta'])
+
+xlim = c(0, max(all_travel$msa))
+
+par(mfrow=c(2, 2))
+hist(all_travel$msa, breaks=30, xlim=xlim)
+hist(all_rest$msa, breaks=30, xlim=xlim)
+hist(sim_msa_travel, breaks=30, xlim=xlim)
+hist(sim_msa_rest, breaks=30, xlim=xlim)
+```
+
+compare simulated HMMs to real HMMs
+
+```{r}
+sim_msa<- c(sim_msa_travel, sim_msa_rest)
+combined_sim_msa<- data.frame(msa = sim_msa)
+sim_msa_data<- prepData(combined_sim_msa, type='LL', coordNames=NULL)
+dist<-list(msa="gamma")
+Par0 <- list(msa= c(rest_msa_params['alpha'],travel_msa_params['alpha'] , rest_msa_params['beta'], travel_msa_params['beta']))
+stateNames <- c("traveling","resting")
+
+sim_test2_msa<- fitHMM(sim_msa_data, nbStates=2, dist=dist8, Par0=Par08, stateNames=stateNames8)
+print(sim_test2_msa)
+```
+
+```{r}
+all_msa<- c(all_travel$msa, all_rest$msa)
+combined_msa <- data.frame(msa = all_msa)
+
+msa_data<- prepData(combined_msa, type='LL', coordNames=NULL)
+dist9<-list(msa="gamma")
+Par09 <- list(msa= c(rest_msa_params['alpha'],travel_msa_params['alpha'] , rest_msa_params['beta'], travel_msa_params['beta']))
+stateNames7 <- c("traveling","resting")
+
+test2_msa <- fitHMM(msa_data, nbStates=2, dist=dist9, Par0=Par09, stateNames=stateNames7)
+print(test2_msa)
+```
+
+The HMM on the average MSA data didn't work, basically the max log likelihood was infinity which is not good... maybe means that MSA is not a good summary statistic. 
+
+
+## Multivariate HMMs
+
+The best candidate variables seem to be the average speed, the mean resultant length, and the maximum depth for each 5 minute segment. 
+
+A model with those 3 variables and 2 states: 
+```{r}
+var3_test<-all_all[,c(2,3,4)]
+
+var3_test_data<-prepData(var3_test, type='LL',coordNames = NULL)
+
+dist<-list(avg_speed="gamma",mean_resultant_length="beta",max_depth="gamma")
+
+Par0 <- list( avg_speed=c(rest_params['alpha'],travel_params['alpha'] , rest_params['beta'], travel_params['beta']),
+              mean_resultant_length= c(rest_mrl_params['alpha'],travel_mrl_params['alpha'] , rest_mrl_params['beta'], travel_mrl_params['beta']), 
+              max_depth=c(rest_depth_params['alpha'], travel_depth_params['alpha'], rest_depth_params['beta'], travel_depth_params['beta']))
+
+stateNames <- c("traveling","resting")
+
+test_3vars <- fitHMM(var3_test_data, nbStates=2, dist=dist, Par0=Par0, stateNames=stateNames)
+print(test_3vars)
+plot(test_3vars, plotCI = TRUE, breaks=30, sepStates=TRUE, ask=TRUE)
+```
+Now try a model with the same 3 variables and 3 states: resting, traveling, and other. The other state is when the video watchers were unsure if the animal was traveling or resting, so it is unclear yet biologically what this state is. 
+
+```{r}
+other_params = moment_match_gamma(
+  mean(all_other$avg_speed), 
+  sd(all_other$avg_speed)
+)
+
+other_mrl_params = moment_match_beta(
+  mean(all_other$mean_resultant_length), 
+  var(all_other$mean_resultant_length)
+)
+
+other_depth_params = moment_match_gamma(
+  mean(all_other$max_depth), 
+  sd(all_other$max_depth)
+)
+
+dist<-list(avg_speed="gamma",mean_resultant_length="beta",max_depth="gamma") #same as before
+Par0 <- list( avg_speed=c(rest_params['alpha'],travel_params['alpha'] , other_params['alpha'], rest_params['beta'], travel_params['beta'], other_params['beta']),
+              mean_resultant_length= c(rest_mrl_params['alpha'],travel_mrl_params['alpha'], other_mrl_params['alpha'], rest_mrl_params['beta'], travel_mrl_params['beta'], other_mrl_params['beta']), 
+              max_depth=c(rest_depth_params['alpha'], travel_depth_params['alpha'],other_depth_params['alpha'],  rest_depth_params['beta'], travel_depth_params['beta'], other_depth_params['beta']))
+
+stateNames <- c("traveling", "other", "resting")
+
+test_3vars_3st <- fitHMM(var3_test_data, nbStates=3, dist=dist, Par0=Par0, stateNames=stateNames)
+print(test_3vars_3st)
+plot(test_3vars_3st, plotCI = TRUE, breaks=30, sepStates=TRUE, ask=TRUE)
+```
+
+Now compare the AIC values of the models with different numbers of states
+```{r}
+AIC(test_3vars, test_3vars_3st, k = 2, n = NULL)
+AICweights(test_3vars, test_3vars_3st, k = 2, n = NULL)
+```
+so the model with three states better fits the data, but this third state is maybe not that important
+
+## Incorporating Covariates into the HMMS
+
+Important covariates:
+Individual identity (some whales might naturally behave differently from others)
+  - this would affect the transition probabilities and the state distributions I think
+Hour of day (there could be cycles in the whales behavior)
+  - this would just affect the transition probabilities?
+Age of the calf (as they age, calves might behave differently)
+  - this would affect the transition probabilities and the state distributions I think
+
+```{r}
+calf_demo = read.csv('calf_demo_data.csv')
+
+demo_hr<-calf_demo[,c(1,3,4,5,7)]
+
+data_hr<-prepData(demo_hr, type='LL',coordNames = NULL)
+formula <- ~ cosinor(hour, period = 24)
+dist<-list(avg_speed="gamma",mrl="beta",max_depth="gamma")
+
+Par0 <- list( avg_speed=c(rest_params['alpha'],travel_params['alpha'] , rest_params['beta'], travel_params['beta']),
+              mrl= c(rest_mrl_params['alpha'],travel_mrl_params['alpha'] , rest_mrl_params['beta'], travel_mrl_params['beta']), 
+              max_depth=c(rest_depth_params['alpha'], travel_depth_params['alpha'], rest_depth_params['beta'], travel_depth_params['beta']))
+
+stateNames <- c("traveling","resting")
+
+test_3vars_hr <- fitHMM(data_hr, nbStates=2, dist=dist, Par0=Par0, stateNames=stateNames, formula=formula)
+print(test_3vars_hr)
+plot(test_3vars_hr, plotCI = TRUE, breaks=30, sepStates=TRUE, ask=TRUE)
+
+```
+
+

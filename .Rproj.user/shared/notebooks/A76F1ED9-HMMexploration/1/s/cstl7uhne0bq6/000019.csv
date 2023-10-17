@@ -1,0 +1,3 @@
+"0",""
+"0","curve(dgamma(x, rest_depth_params['alpha'], rest_depth_params['beta']), "
+"0","      add = T, col = 'blue', lwd = 2)"

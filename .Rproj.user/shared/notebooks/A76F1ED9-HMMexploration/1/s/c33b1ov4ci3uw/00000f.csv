@@ -1,0 +1,41 @@
+"0","library(fitdistrplus)"
+"2","Warning: package ‘fitdistrplus’ was built under R version 4.3.1"
+"2","Loading required package: MASS
+"
+"2","Loading required package: survival
+"
+"0","library(momentuHMM)"
+"2","Warning: package ‘momentuHMM’ was built under R version 4.3.1"
+"2","The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
+which was just loaded, will retire in October 2023.
+Please refer to R-spatial evolution reports for details, especially
+https://r-spatial.org/r/2023/05/15/evolution4.html.
+It may be desirable to make the sf package available;
+package maintainers should consider adding sf to Suggests:.
+The sp package is now running under evolution status 2
+     (status 2 uses the sf package in place of rgdal)
+"
+"2","momentuHMM 1.5.5 (2022-10-18)
+"
+"0","library(data.table)"
+"2","Warning: package ‘data.table’ was built under R version 4.3.1"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","data.table 1.14.8 using 6 threads (see ?getDTthreads).  Latest news: r-datatable.com
+"
+"0","library(ggplot2)"
+"2","Warning: package ‘ggplot2’ was built under R version 4.3.1"
+"0","all_other = read.csv('all_other.csv')"
+"0","all_rest = read.csv('all_rest.csv')"
+"0","all_travel = read.csv('all_travel.csv')"
+"0",""
+"0","# rename the columns "
+"0","col_names = c('date_no', 'avg_speed', 'mean_resultant_length', "
+"0","              'max_depth', 'msa')"
+"0","names(all_other) = col_names"
+"0","names(all_rest) = col_names"
+"0","names(all_travel) = col_names"
+"0",""
+"0","all_all = rbind(all_rest, all_travel, all_other)"

@@ -76,9 +76,9 @@ for a=1:length(filenames)
     BORISfile.ObservationType=[];
     
     BORISVidNumber = str2double(BORISfile.ObservationId{1}(19:20));
-    BORISfile.timeDN = (BORISfile.Time/86400)+vidDN(BORISVidNumber);
-    BORISfile.timehms=datetime(BORISfile.timeDN, 'Format', 'HH:mm:ss.S', 'ConvertFrom', 'datenum');
-    BORISfile.timehmsstr=string(BORISfile.timehms);
+    %BORISfile.timeDN = (BORISfile.Time/86400)+vidDN(BORISVidNumber);
+    %BORISfile.timehms=datetime(BORISfile.timeDN, 'Format', 'HH:mm:ss.S', 'ConvertFrom', 'datenum');
+    %BORISfile.timehmsstr=string(BORISfile.timehms);
 
 ALL_boris=vertcat(ALL_boris, BORISfile);
 
@@ -86,6 +86,13 @@ end
 
 %finds the index of all the breath events
 i_breath=find(strcmp(ALL_boris.Behavior,'breath'));
+
+% greatest time between breaths (breatholding ability)
+breath_seconds=ALL_boris.Time(i_breath);
+breath_diffs=table();
+for b=1:(length(i_breath)-1)
+    breath_diffs(b,:)=table(breath_seconds(b+1)-breath_seconds(b));
+end
 
 %need to add up the lengths of the video durations, 
 total_obs_dur=sum(unique(ALL_boris.ObservationDuration));

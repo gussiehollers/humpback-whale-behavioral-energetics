@@ -1,0 +1,120 @@
+%% HMM data prep 2.0
+% Steps: 
+% 1. Load the data of the first whale and set up a data table with the
+% best speed, Aw, depth, and heading
+% 2. run the hmm_dataprep function to chunk the data and extract the
+% variables
+% 3. add in the ID, length, hour of day for that whale
+% 4. repeat with the second whale and concatenate into one big table
+
+%% Load the data
+
+%load the prh file of the whale you want
+[filenames2,fileloc2]=uigetfile('*.mat*', 'select the PRH file','MultiSelect','on'); 
+load([fileloc2 filenames2]);
+
+%make table with variables to average
+columnNames={'time','speed', 'Awx', 'Awy', 'Awz', 'heading', 'depth'};
+varTypes={'double','double', 'double', 'double', 'double', 'double', 'double'};
+data=table('Size', [length(pitch), 7 ], 'VariableNames', columnNames, 'VariableTypes', varTypes);
+
+%fill in the columns
+tabletime=table(DN);
+data(:, 'time') = tabletime;
+
+tableAwx=table(Aw(:,1));
+data(:, 'Awx') = tableAwx;
+
+tableAwy=table(Aw(:,2));
+data(:, 'Awy') = tableAwy;
+
+tableAwz=table(Aw(:,3));
+data(:, 'Awz') = tableAwz;
+
+%heading
+tablehead=table(head);
+data(:, 'heading') = tablehead;
+
+%depth (turns negatives into 0)
+tabledepth=table(p);
+condition=tabledepth.p<0;
+tabledepth.p(condition)=0;
+data(:, 'depth') = tabledepth;
+
+%have to find the best speed measurement
+%first value after the NaNs
+nonNaNIndices = find(~isnan(speed.JJr2), 1);
+JJr2_value = speed.JJr2(nonNaNIndices);
+FNr2_value = speed.FNr2(nonNaNIndices);
+
+if JJr2_value> FNr2_value
+    tableSpeed=table(speed.JJ);
+else
+    tableSpeed=table(speed.FN);
+end
+
+data(:, 'speed') = tableSpeed;
+
+%get rid of NaN values
+nonNaNi=~isnan(data.Awx) & ~isnan(data.heading) & ~isnan(data.Awy) & ~isnan(data.Awz) & ~isnan(data.speed);
+data_filt=data(nonNaNi, :);
+
+%% chunk and average data
+
+segment_length=60*5;
+data=data_filt;
+
+[avg_time, avg_speed, mean_resultant_length, min_specific_accel, max_depth]=hmm_dataprep(data, segment_length);
+
+
+%% Put into one table and Add ID, relative length, and hour of the day
+
+columnNames={'ID', 'rel_length', 'hour','avg_speed', 'mrl', 'msa', 'max_depth'};
+varTypes={'string', 'double', 'double', 'double', 'double', 'double', 'double'};
+hmm_data=table('Size', [length(avg_speed), 7 ], 'VariableNames', columnNames, 'VariableTypes', varTypes);
+
+hmm_data(:,'avg_speed')=table(avg_speed);
+hmm_data(:,'mrl')=table(mean_resultant_length);
+hmm_data(:, 'msa')=table(min_specific_accel);
+hmm_data(:,'max_depth')=table(max_depth);
+
+%Add ID
+whaleID=string(INFO.whaleName);
+strCellArray = repmat({whaleID}, length(hmm_data.avg_speed), 1);
+hmm_data(:, 'ID') = strCellArray;
+
+%relative length of the calf, or the absolute length of the mother
+[filenames3,fileloc3]=uigetfile('*.csv*', 'select the animal size file','MultiSelect','on');
+WhaleSizes=readtable([fileloc3 filenames3]);
+i=find(strcmp(WhaleSizes.CATS_Tag_No,INFO.whaleName)==1);
+pct_length=WhaleSizes.Rel_length(i);
+pct_length_rep=repmat(pct_length, length(hmm_data.avg_speed), 1);
+pct_length_rep=table(pct_length_rep);
+
+hmm_data(:, 'rel_length') = pct_length_rep;
+
+%hour of the day
+timeHMS=datetime(avg_time,'ConvertFrom','datenum','Format','HH:mm:ss.SSS');
+timestr=string(timeHMS);
+
+numRows = length(timestr);
+All_hr=table(zeros(numRows, 1), 'VariableNames', {'HourColumn'});
+for a = 1:numRows
+    All_hr.HourColumn(a) = str2double(timestr{a}(1:2));
+end
+
+hmm_data(:, 'hour') = All_hr;
+
+%% Concatenate into one big table
+
+%first time
+%AllWhales_chunk= hmm_data;
+
+AllWhales_chunk=vertcat(AllWhales_chunk, hmm_data);
+
+save('AllWhales_chunk.mat','AllWhales_chunk','-mat')
+
+filename = 'calf_demo_data.csv';
+writetable(AllWhales_chunk, filename);
+
+

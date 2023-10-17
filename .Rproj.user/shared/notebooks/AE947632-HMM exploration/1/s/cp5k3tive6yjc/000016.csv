@@ -1,0 +1,5 @@
+"0","plot(test_3vars_all, plotCI = TRUE, breaks=30, sepStates=TRUE, ask=TRUE)
+"
+"1","Decoding state sequence... "
+"1","DONE
+"

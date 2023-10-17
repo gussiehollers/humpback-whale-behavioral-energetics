@@ -1,0 +1,9 @@
+"0","combined_plot <- histogram1 + histogram2
+"
+"1","[1m[33mError[39m in `ggplot_add()`:[22m
+[1m[22m[33m![39m Can't add `histogram2` to a [34m<ggplot>[39m object.
+Backtrace:
+[90m 1. [39mggplot2:::`+.gg`(histogram1, histogram2)
+[90m 2. [39mggplot2:::add_ggplot(e1, e2, e2name)
+[90m 4. [39m[1m[94mggplot2:::ggplot_add.default([39m[22mobject, p, objectname[1m[94m)[39m[22m
+"

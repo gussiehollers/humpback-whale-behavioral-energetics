@@ -1,0 +1,4 @@
+"0",""
+"0","# curve for estimated gamma"
+"0","curve(dgamma(x, travel_params['alpha'], travel_params['beta']), "
+"0","      add = T, col = 'blue', lwd = 2)"

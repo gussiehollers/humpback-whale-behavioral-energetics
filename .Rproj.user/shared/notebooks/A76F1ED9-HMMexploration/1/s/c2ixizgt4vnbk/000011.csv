@@ -1,0 +1,3 @@
+"0",""
+"0","# vertical line for mean"
+"0","abline(v=mean(all_travel$mean_resultant_length), col='red', lwd=2)"

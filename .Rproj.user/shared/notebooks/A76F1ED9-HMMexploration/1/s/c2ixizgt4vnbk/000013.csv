@@ -1,0 +1,4 @@
+"0",""
+"0","# curve for estimated beta"
+"0","curve(dbeta(x, travel_mrl_params['alpha'], travel_mrl_params['beta']), "
+"0","      add = T, col = 'blue', lwd = 2)"

@@ -1,0 +1,4 @@
+"0",""
+"0","# ditto as above but for rest "
+"0","hist(all_rest$msa, probability = TRUE, breaks=20, main = 'Rest',"
+"0","     xlim=c(0, max(all_travel$msa)))"

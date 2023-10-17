@@ -1,0 +1,3 @@
+"0",""
+"0","hist(all_rest$avg_speed, probability = TRUE, breaks=20, main = 'Rest',"
+"0","     xlim=c(0, max(all_travel$avg_speed)))"

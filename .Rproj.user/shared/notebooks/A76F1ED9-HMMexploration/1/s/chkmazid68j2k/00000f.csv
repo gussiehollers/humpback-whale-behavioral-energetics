@@ -1,0 +1,6 @@
+"0","# subplots"
+"0","par(mfrow = c(2, 1))"
+"0",""
+"0","# histogram for travel "
+"0","hist(all_travel$avg_speed, probability = TRUE, breaks=20, main = 'Travel', "
+"0","     xlim=c(0, max(all_travel$avg_speed)), xlab='')"
